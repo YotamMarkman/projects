@@ -51,10 +51,12 @@ public class ClientHandler implements Runnable {
                     String targetUser = parts[0]; 
                     String messageBody = parts[1];
                     ClientHandler targetHandler = ClientManager.getHandler(targetUser);
+                    System.out.println("DEBUG: Forwarding msg from " + myUsername + " to " + targetUser);
                     if (targetHandler != null) {
                         targetHandler.sendMessage((byte)Protocol.CMD_MSG, this.myUsername + "|" + messageBody);
+                        System.out.println("DEBUG: Message sent to output stream.");
                     } else {
-                        System.out.println("User " + targetUser + " not found.");
+                        System.out.println("DEBUG: User " + targetUser + " NOT FOUND in map.");
                     }
                 }
                 break;
