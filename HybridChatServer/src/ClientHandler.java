@@ -61,6 +61,11 @@ public class ClientHandler implements Runnable {
                 }
                 break;
             // More cases here later (like ACK or LOGOUT)
+            case Protocol.CMD_USER_LIST:
+                System.out.println("DEBUG: User " + myUsername + " asked for user list.");
+                String usersList = getUsers();
+                send_users_list(usersList);
+                break;
             default:
                 System.out.println("Unknown command received: " + header.command);
                 break;
@@ -68,6 +73,20 @@ public class ClientHandler implements Runnable {
     }
     public void sendMessage(byte cmdId, String text) {
         Protocol.sendMessage(out, cmdId, 0, text);
+    }
+    
+    public String getUsers(){
+        StringBuilder usersList = new StringBuilder();
+        for(Object user : ClientManager.getAllClients()){
+            if(usersList.length() > 0){
+                usersList.append(",");
+            }
+            usersList.append((String)user);
+        }
+        return usersList.toString();
+    }
+    public void send_users_list(String usersList) {
+        Protocol.sendMessage(out, (byte)Protocol.CMD_USER_LIST, 0, usersList);
     }
 
     private void closeConnection() {

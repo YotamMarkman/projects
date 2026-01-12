@@ -1,5 +1,7 @@
 package src;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -24,6 +26,13 @@ public class ClientManager {
         System.out.println("User " + username + " has disconnected");
     }
     
+    public static List getAllClients() {
+        List<String> userList = new ArrayList<>();
+        for (String username : clients.keySet()) {
+            userList.add(username);
+        }
+        return userList;
+    }
 
     public static boolean isOnline(String username) {
         return clients.containsKey(username);

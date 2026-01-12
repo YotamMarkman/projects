@@ -33,6 +33,11 @@ class ChatClient:
         self.socket.sendall(packet)
         print(f"Sent {packedMessage}")
         
+    def send_user_list_request(self):
+        packedMessage = Protocol.pack_message(Protocol.CMD_USERS,"")
+        self.socket.sendall(packedMessage)
+        print(f"Sent the Users")
+        
     def recv_exact(self, n_bytes):
         data = b''
         while len(data) < n_bytes:
@@ -56,12 +61,16 @@ class ChatClient:
                 
                 if header:
                     msg_length = header['length']
+                    cmd = header['command'] 
+                    payload_content = ""
                     if msg_length > 0:
                         payload_data = self.recv_exact(msg_length)
-                        message = payload_data.decode('utf-8')
-                        
-                        print(f"\n[RECEIVED] {message}")
-                        print("Enter command: ", end='', flush=True)
+                        payload_content = payload_data.decode('utf-8')
+                    if cmd == 0x02: 
+                         print(f"\n[RECEIVED] {payload_content}")
+                    elif cmd == 0x03:
+                         print(f"\n[ONLINE USERS] {payload_content}")
+                    print("Enter command: ", end='', flush=True)
                 else:
                     print("[ERROR] Header invalid (Magic mismatch)")
                         
@@ -77,7 +86,7 @@ class ChatClient:
         self.send_login(self.username)
         t = threading.Thread(target=self.listen_messages, daemon=True)
         t.start()
-        print("Type 'Target|Message' to chat. Type 'q' to quit.")
+        print("Type 'Target|Message' to chat. Type 'q' to quit. Type 'users' to see all connected users")
         while self.running:    
             try:
                 user_input = input()
@@ -85,7 +94,9 @@ class ChatClient:
                     self.running = False
                     self.socket.close()
                     break
-                if '|' in user_input:
+                elif user_input.lower() in ["users"]:
+                   self.send_user_list_request() 
+                elif '|' in user_input:
                     target, message = user_input.split('|', 1)
                     self.send_chat(target, message)
                 else:

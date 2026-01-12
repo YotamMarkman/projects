@@ -4,6 +4,7 @@ import time
 class Protocol:
     CMD_LOGIN = 0x01
     CMD_MSG = 0x02
+    CMD_USERS = 0x03
     MAGIC = 0xCAFE
     
     # Format: > (Big Endian), H (2), B (1), I (4), I (4), Q (8) = 19 Bytes

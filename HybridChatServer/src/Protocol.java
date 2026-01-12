@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 public class Protocol {
     public static final int CMD_LOGIN = 0x01;
     public static final int CMD_MSG = 0x02;
+    public static final int CMD_USER_LIST = 0x03;
     public static final short MAGIC = (short) 0xCAFE;
     
     public static class Header{
