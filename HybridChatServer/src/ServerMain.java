@@ -3,6 +3,9 @@ package src;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Main server entry point - fires up the chat server and handles incoming connections
+ */
 public class ServerMain {
     public static void main(String[] args) {
         int port = 8080;
@@ -11,13 +14,13 @@ public class ServerMain {
             System.out.println("The Hybird Chat Server is running on port " + port);
 
             while (true) {
-                // 1. Accept new connection (Blocks until someone connects)
+                // Wait for someone to connect (this blocks until a client shows up)
                 Socket clientSocket = server.accept();
                 
-                // 2. Create the worker
+                // Spin up a handler for this specific client
                 ClientHandler handler = new ClientHandler(clientSocket);
                 
-                // 3. Launch the thread
+                // Launch it in its own thread so we can accept more connections
                 Thread thread = new Thread(handler);
                 thread.start();
             }

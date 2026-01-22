@@ -37,4 +37,4 @@ python client/client.py
 
 19-byte header: `[Magic: 0xCAFE][Command][Length][Sequence][Timestamp]` followed by UTF-8 payload.
 
-**Commands**: `0x01` LOGIN, `0x02` MSG
+**Commands**: `0x01` LOGIN, `0x02` MSG, `0x03` USERS 
